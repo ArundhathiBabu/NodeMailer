@@ -11,16 +11,17 @@ const router=express.Router()
 //user registration
 router.post('/register',async(req,res)=>{
     try {
+        console.log(req.body);
         const{username,password,mail}=req.body
         const hashedPassword=await bcrypt.hash(password,10)
         const user=new User({username:username,password:hashedPassword,mail:mail})
         await user.save()
-        res.status(201).json({message:"User Registered"})
+        res.status(200).json({message:"User Registered"})
         
         
     } catch (error) {
         console.log(error)
-       // res.status(500).json({error:"registration failed"})
+       //res.status(400).json({error:"registration failed"})
         
     }
 })
@@ -44,8 +45,8 @@ router.post('/login',async(req,res)=>{
         res.status(200).json({token})
     } 
     catch (error) {
-        console.log(error)
-        //res.status(500).json({error:"Login failed"})
+       // console.log(error)
+        res.status(500).json({error:"Login failed"})
         
     }
 })
@@ -54,8 +55,8 @@ router.post('/login',async(req,res)=>{
 
 router.post('/forgotpswd',async(req,res)=>{
     try {
-        const{username}=req.body
-    const user = await User.findOne({ username:username });
+        const{mail}=req.body
+    const user = await User.findOne({ mail:mail });
     if (!user) {
         return res.status(401).json({ message: 'User not found' });
     }
@@ -64,10 +65,10 @@ router.post('/forgotpswd',async(req,res)=>{
         if(updateOtp){
             sendMail(user.mail,otp);
             console.log(user.mail);
-            res.status(200).json({message:"OTP send to mailid"});
+            return res.status(200).json({message:"OTP send to mailid"});
         }
     
-    return res.status(400).json({ message: 'OTP sent Failed' });
+     res.status(400).json({ message: 'OTP sent Failed' });
     }catch (error) {
         console.log(error)
     }

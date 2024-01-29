@@ -1,6 +1,5 @@
 const nodeMailer =require('nodemailer');
 const email=['arundhathibabu28@gmail.com'];
-console.log(email);
 const sendMail=async(email,otp)=>{
     const transporter=nodeMailer.createTransport({
         host:"smtp.gmail.com",
